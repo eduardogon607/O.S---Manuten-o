@@ -7,15 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Carrega a configuração secreta (que está fora do Git) -->
+<script src="config.js"></script>
+
 <style>
-:root {
-  --p: #6366f1; --p-dark: #4f46e5; --s: #10b981; --w: #f59e0b; --d: #ef4444;
-  --bg: #f8fafc; --c: #ffffff; --t: #0f172a; --m: #64748b; --b: #e2e8f0; --r: 16px;
-  --sh: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
-  --shl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
-}
+/* O CSS PERMANECE EXATAMENTE IGUAL AO ANTERIOR */
+:root { --p: #6366f1; --p-dark: #4f46e5; --s: #10b981; --w: #f59e0b; --d: #ef4444; --bg: #f8fafc; --c: #ffffff; --t: #0f172a; --m: #64748b; --b: #e2e8f0; --r: 16px; --sh: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); --shl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background: var(--bg); color: var(--t); min-height: 100vh; font-size: 15px; -webkit-font-smoothing: antialiased; }
+body { background: var(--bg); color: var(--t); min-height: 100vh; font-size: 15px; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 .btn { background: var(--p); color: #fff; border: none; padding: 14px 24px; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 600; display: inline-flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.2s ease; text-decoration: none; }
 .btn:hover { background: var(--p-dark); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
 .btn-s { background: var(--s); } .btn-s:hover { background: #059669; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
@@ -23,24 +23,41 @@ body { background: var(--bg); color: var(--t); min-height: 100vh; font-size: 15p
 .btn-d { background: var(--d); } .btn-d:hover { background: #dc2626; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
 .btn-o { background: transparent; border: 2px solid var(--b); color: var(--t); } .btn-o:hover { background: #f1f5f9; border-color: #cbd5e1; box-shadow: none; }
 .btn-sm { padding: 8px 16px; font-size: 13px; border-radius: 8px; width: auto; }
-
-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--b); padding: 16px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 15px; }
+header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--b); padding: 16px 30px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; flex-wrap: wrap; gap: 15px; }
 .logo h1 { font-size: 20px; color: var(--p-dark); display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.5px; }
 .ui { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-
-.tabs { display: flex; gap: 8px; padding: 20px 30px 0; max-width: 1000px; margin: 0 auto; width: 100%; border-bottom: 1px solid var(--b); overflow-x: auto; }
-.tb { background: transparent; border: none; padding: 12px 24px; font-size: 15px; font-weight: 600; color: var(--m); cursor: pointer; border-bottom: 3px solid transparent; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
-.tb:hover { color: var(--p); } .tb.active { color: var(--p-dark); border-bottom-color: var(--p-dark); }
-
-.main { max-width: 1000px; margin: 0 auto; width: 100%; padding: 30px; }
-.pane { display: none; animation: fadeIn 0.3s ease; } .pane.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+.screen { display: none; position: fixed; top: 70px; left: 0; width: 100%; height: calc(100vh - 70px); overflow-y: auto; background: var(--bg); z-index: 10; padding: 30px; }
+.screen.active { display: block; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+.screen-content { max-width: 1000px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
+#home-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 70px); }
+.home-title { text-align: center; margin-bottom: 40px; }
+.home-title h2 { font-size: 32px; font-weight: 800; color: var(--t); margin-bottom: 10px; letter-spacing: -1px; }
+.home-title p { font-size: 16px; color: var(--m); max-width: 500px; margin: 0 auto; }
+.menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; max-width: 900px; }
+.menu-card { background: var(--c); border-radius: 20px; padding: 30px 24px; text-align: center; box-shadow: var(--sh); border: 2px solid var(--b); cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.menu-card:hover { transform: translateY(-8px); box-shadow: var(--shl); border-color: var(--p); }
+.menu-card .icon-box { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 5px; transition: 0.3s; }
+.menu-card:hover .icon-box { transform: scale(1.1); }
+.menu-card h3 { font-size: 18px; font-weight: 700; color: var(--t); }
+.menu-card p { font-size: 13px; color: var(--m); line-height: 1.4; }
+.card-abrir .icon-box { background: #e0e7ff; color: var(--p); }
+.card-lider .icon-box { background: #d1fae5; color: var(--s); }
+.card-manut .icon-box { background: #fef3c7; color: var(--w); }
+.back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--m); font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 20px; background: none; border: none; padding: 0; transition: 0.2s; }
+.back-btn:hover { color: var(--p); }
+.back-btn i { font-size: 16px; }
+.inner-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid var(--b); padding-bottom: 10px; }
+.inner-tab { background: transparent; border: none; font-size: 16px; font-weight: 600; color: var(--m); cursor: pointer; padding: 10px 20px; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+.inner-tab:hover { color: var(--p); background: #f1f5f9; }
+.inner-tab.active { color: var(--p-dark); background: #e0e7ff; }
+.inner-pane { display: none; animation: fadeIn 0.3s ease; }
+.inner-pane.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 .card { background: var(--c); border-radius: var(--r); padding: 32px; box-shadow: var(--sh); margin-bottom: 24px; border: 1px solid var(--b); }
 .ch { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--b); flex-wrap: wrap; gap: 15px; }
 .ch h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
 .cid { font-weight: 800; color: var(--p); font-size: 18px; background: #e0e7ff; padding: 4px 12px; border-radius: 8px; }
-
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .fg { margin-bottom: 20px; position: relative; }
 .fg label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: var(--t); }
@@ -50,14 +67,10 @@ header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); bord
 .fg i { position: absolute; left: 16px; top: 42px; color: var(--m); font-size: 16px; pointer-events: none; }
 .fg.full textarea { padding-top: 14px; }
 .fg select { padding-left: 16px; cursor: pointer; }
-.fg.search-icon input { padding-left: 45px; }
-
 .rg { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
 .rl { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border: 2px solid var(--b); border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 500; flex: 1 1 auto; justify-content: center; background: #f8fafc; transition: all 0.2s; }
 .rl:hover { border-color: #cbd5e1; background: #fff; }
 .rl input[type="radio"] { width: 18px; height: 18px; accent-color: var(--p); cursor: pointer; }
-
-/* CARDS DE CHAMADO */
 .ci { background: var(--c); border-radius: var(--r); padding: 24px; margin-bottom: 16px; box-shadow: var(--sh); border: 1px solid var(--b); border-left: 6px solid var(--d); transition: 0.2s; }
 .ci:hover { box-shadow: var(--shl); transform: translateY(-2px); }
 .ci.em-andamento { border-left-color: var(--w); }
@@ -65,10 +78,7 @@ header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); bord
 .ci.arquivado, .ci.cancelado { border-left-color: var(--m); opacity: 0.8; }
 .ct { display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
 .sb { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-.ba { background: #fee2e2; color: #b91c1c; }
-.bn { background: #fef3c7; color: #b45309; }
-.br { background: #d1fae5; color: #047857; }
-.bx { background: #f1f5f9; color: #475569; }
+.ba { background: #fee2e2; color: #b91c1c; } .bn { background: #fef3c7; color: #b45309; } .br { background: #d1fae5; color: #047857; } .bx { background: #f1f5f9; color: #475569; }
 .cif { font-size: 14px; color: var(--m); margin-bottom: 15px; line-height: 1.6; }
 .cif strong { color: var(--t); }
 .cp { background: #f8fafc; padding: 16px; border-radius: 10px; font-size: 14px; margin-bottom: 16px; border: 1px solid var(--b); line-height: 1.6; }
@@ -76,26 +86,19 @@ header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); bord
 .ar { display: flex; gap: 12px; align-items: flex-end; margin-top: 12px; flex-wrap: wrap; }
 .ar select, .ar input { flex: 1 1 200px; padding: 12px; border: 2px solid var(--b); border-radius: 8px; background: #fff; font-size: 14px; }
 .bg { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-
-.bl { text-align: center; padding: 80px 20px; background: var(--c); border-radius: var(--r); box-shadow: var(--sh); border: 1px solid var(--b); }
-.bl i { font-size: 56px; color: #cbd5e1; margin-bottom: 20px; }
-.bl h3 { font-size: 20px; margin-bottom: 10px; }
-.bl p { color: var(--m); margin-bottom: 25px; font-size: 15px; }
-.bl .btn { max-width: 300px; margin: 0 auto; }
-
 .dash { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 25px; }
-.st { background: var(--c); padding: 24px; border-radius: var(--r); box-shadow: var(--sh); text-align: center; border: 1px solid var(--b); border-top: 5px solid var(--p); }
+.st { background: var(--c); padding: 24px; border-radius: var(--r); box-shadow: var(--sh); text-align: center; border: 2px solid var(--b); border-top: 5px solid var(--p); cursor: pointer; transition: all 0.2s; position: relative; }
+.st:hover { transform: translateY(-3px); box-shadow: var(--shl); }
+.st.active { border-color: var(--p); background: #f5f3ff; border-top-width: 5px; }
 .st.a { border-top-color: var(--d); } .st.n { border-top-color: var(--w); } .st.r { border-top-color: var(--s); }
+.st.a.active { border-color: var(--d); background: #fef2f2; } .st.n.active { border-color: var(--w); background: #fffbeb; } .st.r.active { border-color: var(--s); background: #ecfdf5; }
 .st .num { font-size: 36px; font-weight: 800; line-height: 1; margin-bottom: 5px; }
 .st.a .num { color: var(--d); } .st.n .num { color: var(--w); } .st.r .num { color: var(--s); }
 .st .lbl { font-size: 12px; color: var(--m); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-
 .srch { position: relative; margin-bottom: 15px; }
 .srch i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--m); font-size: 16px; }
 .srch input { width: 100%; padding: 16px 16px 16px 50px; border: 2px solid var(--b); border-radius: 12px; font-size: 15px; background: var(--c); transition: 0.2s; }
 .srch input:focus { outline: none; border-color: var(--p); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
-
-/* TIMELINE DE STATUS */
 .timeline { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid var(--b); }
 .tl-item { display: flex; gap: 15px; position: relative; }
 .tl-icon { width: 36px; height: 36px; border-radius: 50%; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 2; border: 3px solid #f8fafc; }
@@ -106,9 +109,7 @@ header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); bord
 .tl-content p { font-size: 13px; color: var(--m); }
 .tl-item:not(:last-child)::after { content: ''; position: absolute; left: 17px; top: 36px; bottom: -15px; width: 2px; background: #e2e8f0; z-index: 1; }
 .tl-item.done:not(:last-child)::after { background: var(--p); }
-
-/* MODAIS */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
 .modal.ativo { display: flex; animation: fadeIn 0.2s ease; }
 .box { background: var(--c); padding: 40px; border-radius: 20px; box-shadow: var(--shl); width: 100%; max-width: 420px; text-align: center; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -118,22 +119,21 @@ header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); bord
 .prt { background: #ecfdf5; border: 2px dashed var(--s); border-radius: 12px; padding: 20px; margin-bottom: 25px; }
 .prt .lb { font-size: 12px; color: var(--s); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 .prt .nm { font-size: 32px; font-weight: 800; color: var(--s); }
-
+@media(max-width: 900px) { .menu-grid { grid-template-columns: 1fr; max-width: 400px; } }
 @media(max-width: 768px) {
   header { padding: 15px 20px; }
-  .tabs { padding: 15px 20px 0; }
-  .main { padding: 20px; }
+  .screen { padding: 20px; top: 70px; }
   .card { padding: 24px 20px; }
   .row { grid-template-columns: 1fr; gap: 0; }
   .dash { grid-template-columns: repeat(3, 1fr); }
   .st .num { font-size: 28px; } .st { padding: 16px; }
   .box { padding: 30px 20px; }
+  .home-title h2 { font-size: 26px; }
+  .inner-tabs { flex-direction: column; gap: 5px; border-bottom: none; }
+  .inner-tab { width: 100%; justify-content: center; border: 2px solid var(--b); }
+  .inner-tab.active { border-color: var(--p); }
 }
-@media(max-width: 480px) {
-  .tb { padding: 12px 16px; font-size: 14px; }
-  .dash { grid-template-columns: 1fr; }
-  .rl { padding: 12px; width: 100%; }
-}
+@media(max-width: 480px) { .dash { grid-template-columns: 1fr; } .rl { padding: 12px; width: 100%; } }
 </style>
 </head>
 <body>
@@ -152,11 +152,9 @@ header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); bord
 
 <div id="modal-sucesso" class="modal">
   <div class="box">
-    <div style="width:80px;height:80px;background:#ecfdf5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--s);font-size:40px;">
-      <i class="fa-solid fa-check"></i>
-    </div>
+    <div style="width:80px;height:80px;background:#ecfdf5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--s);font-size:40px;"><i class="fa-solid fa-check"></i></div>
     <h2>Chamado Criado!</h2>
-    <p>Sua solicitação foi enviada. Guarde o protocolo para acompanhar.</p>
+    <p>Sua solicitação foi enviada para a nuvem. Guarde o protocolo para acompanhar.</p>
     <div class="prt"><div class="lb">Protocolo</div><div class="nm" id="protocoloNumero"></div></div>
     <button type="button" id="btnFecharSucesso" class="btn btn-s" style="width:100%;">Entendido</button>
   </div>
@@ -169,589 +167,406 @@ header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); bord
       <div id="displayUserName" style="font-size:14px;font-weight:700;">Visitante</div>
       <div id="displayUserRole" style="font-size:11px;color:var(--m);text-transform:uppercase;font-weight:600;">Solicitante</div>
     </div>
-    <button type="button" id="btnLoginLogout" class="btn btn-sm btn-o"><i class="fa-solid fa-key"></i> Login</button>
+    <button type="button" id="btnLoginLogout" class="btn btn-sm btn-o" style="display:none;"><i class="fa-solid fa-key"></i> Login</button>
   </div>
 </header>
 
-<div class="tabs" id="navTabs"></div>
-
-<div class="main">
-  
-  <!-- ABA NOVO CHAMADO -->
-  <div id="pane-novo" class="pane active">
-    <div class="card">
-      <div class="ch"><h2>Nova Solicitação</h2><span class="cid" id="numChamadoDisplay"></span></div>
-      
-      <div class="fg">
-        <label>Tipo de Manutenção</label>
-        <div class="rg">
-          <label class="rl"><input type="radio" name="tipo" value="Corretiva"> Corretiva</label>
-          <label class="rl"><input type="radio" name="tipo" value="Preventiva"> Preventiva</label>
-          <label class="rl"><input type="radio" name="tipo" value="Predial"> Predial</label>
-          <label class="rl"><input type="radio" name="tipo" value="Planejada"> Planejada</label>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="fg">
-          <label>Setor</label><i class="fa-solid fa-building"></i>
-          <select id="setor">
-            <option value="">Selecione o setor...</option>
-            <option value="Tecnologia da informação">Tecnologia da informação</option>
-            <option value="Logística">Logística</option>
-            <option value="Monitoramento">Monitoramento</option>
-            <option value="Recepção">Recepção</option>
-            <option value="Compras">Compras</option>
-            <option value="Administrativo">Administrativo</option>
-            <option value="RH">RH</option>
-            <option value="Copa">Copa</option>
-            <option value="Expedição">Expedição</option>
-            <option value="Novos negócios">Novos negócios</option>
-            <option value="Almoxarifado">Almoxarifado</option>
-            <option value="Coordenação">Coordenação</option>
-            <option value="QSMS">QSMS</option>
-            <option value="Sala do operacional">Sala do operacional</option>
-            <option value="Copa porto">Copa porto</option>
-          </select>
-        </div>
-        <div class="fg"><label>Emissor</label><i class="fa-solid fa-user-circle"></i><input type="text" id="emissor" placeholder="Seu nome completo"></div>
-      </div>
-
-      <div class="fg"><label>Data e Hora</label><i class="fa-regular fa-calendar"></i><input type="datetime-local" id="dataHora"></div>
-      
-      <div class="fg full"><label>Descrição do Problema</label><textarea id="problema" rows="4" placeholder="Descreva detalhadamente o que está acontecendo..."></textarea></div>
-      
-      <button type="button" id="btnAbrirChamado" class="btn btn-s" style="width:100%;margin-top:10px;padding:16px;"><i class="fa-solid fa-paper-plane"></i> Abrir Chamado</button>
-    </div>
+<div id="home-screen" class="screen active">
+  <div class="home-title">
+    <h2>Bem-vindo à Manutenção</h2>
+    <p>Selecione uma das opções abaixo para acessar o sistema.</p>
   </div>
-
-  <!-- ABA MEUS CHAMADOS (FILTRADO POR SETOR) -->
-  <div id="pane-meus" class="pane">
-    <div class="card">
-      <div class="ch">
-        <h2>Acompanhar Chamados</h2>
-        <span style="font-size:13px;color:var(--m);font-weight:500;">Filtrado por setor</span>
-      </div>
-      
-      <div class="row" style="margin-bottom:15px;">
-        <div class="fg" style="margin-bottom:0;">
-          <select id="filtroSetor" style="padding-left:16px;">
-            <option value="">Todos os setores</option>
-            <option value="Tecnologia da informação">Tecnologia da informação</option>
-            <option value="Logística">Logística</option>
-            <option value="Monitoramento">Monitoramento</option>
-            <option value="Recepção">Recepção</option>
-            <option value="Compras">Compras</option>
-            <option value="Administrativo">Administrativo</option>
-            <option value="RH">RH</option>
-            <option value="Copa">Copa</option>
-            <option value="Expedição">Expedição</option>
-            <option value="Novos negócios">Novos negócios</option>
-            <option value="Almoxarifado">Almoxarifado</option>
-            <option value="Coordenação">Coordenação</option>
-            <option value="QSMS">QSMS</option>
-            <option value="Sala do operacional">Sala do operacional</option>
-            <option value="Copa porto">Copa porto</option>
-          </select>
-        </div>
-        <div class="fg" style="margin-bottom:0; position:relative;">
-          <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--m);"></i>
-          <input type="number" id="buscaProtocolo" placeholder="Buscar protocolo..." style="padding-left:45px;">
-        </div>
-      </div>
-      
-      <div id="lista-meus"></div>
+  <div class="menu-grid">
+    <div class="menu-card card-abrir" onclick="window.irPara('tela-novo')">
+      <div class="icon-box"><i class="fa-solid fa-plus"></i></div>
+      <h3>Abrir Chamado</h3>
+      <p>Solicite uma manutenção e acompanhe o status.</p>
     </div>
-  </div>
-
-  <!-- ABA LÍDER -->
-  <div id="pane-lider" class="pane">
-    <div id="blocked-lider" class="bl" style="display:none;">
-      <i class="fa-solid fa-lock"></i><h3>Acesso Restrito</h3>
-      <p>Faça login como líder de manutenção para visualizar os chamados.</p>
-      <button type="button" class="btn btnAbrirLogin">Fazer Login</button>
+    <div class="menu-card card-lider" onclick="window.acessarPainel('lider')">
+      <div class="icon-box"><i class="fa-solid fa-clipboard-list"></i></div>
+      <h3>Painel do Líder</h3>
+      <p>Gerencie equipes, atribua chamados e valide soluções.</p>
     </div>
-    <div id="content-lider" style="display:none;">
-      <div class="dash" id="dashboard-lider"></div>
-      <div class="srch"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="buscaLider" placeholder="Buscar por ID, setor ou emissor..."></div>
-      <div id="lista-lider"></div>
-    </div>
-  </div>
-
-  <!-- ABA MANUTENTOR -->
-  <div id="pane-manutentor" class="pane">
-    <div id="blocked-manutentor" class="bl" style="display:none;">
-      <i class="fa-solid fa-lock"></i><h3>Acesso Restrito</h3>
-      <p>Faça login como manutentor para visualizar suas tarefas.</p>
-      <button type="button" class="btn btnAbrirLogin">Fazer Login</button>
-    </div>
-    <div id="content-manutentor" style="display:none;">
-      <div id="lista-manutentor"></div>
+    <div class="menu-card card-manut" onclick="window.acessarPainel('manutentor')">
+      <div class="icon-box"><i class="fa-solid fa-wrench"></i></div>
+      <h3>Minhas Tarefas</h3>
+      <p>Acesse os chamados atribuídos e registre soluções.</p>
     </div>
   </div>
 </div>
 
-<script>
-(function(){
-const USUARIOS = {
-  'admin': { senha: 'Cbt@manutencao', nome: 'Admin (Líder)', perfil: 'lider' },
-  'ManutencaoBel': { senha: 'Cbt@manutencao', nome: 'Manutenção Bel', perfil: 'manutentor' }
-};
-const MANUTENTOR_NOME = "Manutenção Bel";
-let userLogado = null;
-let contador = parseInt(localStorage.getItem('contadorChamado')) || 260;
-
-function $(id){ return document.getElementById(id); }
-function getChamados(){ return JSON.parse(localStorage.getItem('chamados')) || []; }
-function setChamados(a){ localStorage.setItem('chamados', JSON.stringify(a)); }
-
-function tentarLogin(){
-  const user = $('loginUser').value.trim();
-  const pass = $('loginPass').value;
-  const msg = $('msgLogin');
-  
-  if(USUARIOS[user] && USUARIOS[user].senha === pass){
-    userLogado = { username: user, nome: USUARIOS[user].nome, perfil: USUARIOS[user].perfil };
-    sessionStorage.setItem('usuarioLogado', JSON.stringify(userLogado));
-    fecharLogin();
-    atualizarTela();
-    if(userLogado.perfil === 'lider') mostrarAba('lider'); else mostrarAba('manutentor');
-  } else {
-    msg.textContent = '❌ Usuário ou senha incorretos';
-    msg.style.color = '#ef4444';
-    $('loginPass').value = '';
-  }
-}
-
-function abrirLogin(){ $('modal-login').classList.add('ativo'); $('msgLogin').textContent=''; }
-function fecharLogin(){ $('modal-login').classList.remove('ativo'); $('loginUser').value=''; $('loginPass').value=''; }
-function logout(){ if(confirm('Deseja sair do sistema?')){ userLogado=null; sessionStorage.removeItem('usuarioLogado'); atualizarTela(); mostrarAba('novo'); } }
-function toggleLogin(){ if(userLogado) logout(); else abrirLogin(); }
-
-function atualizarTela(){
-  if(userLogado){
-    $('displayUserName').textContent = userLogado.nome;
-    $('displayUserRole').textContent = userLogado.perfil.toUpperCase();
-    $('btnLoginLogout').innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Sair';
-    $('btnLoginLogout').className = 'btn btn-sm btn-d';
-  } else {
-    $('displayUserName').textContent = 'Visitante';
-    $('displayUserRole').textContent = 'Solicitante';
-    $('btnLoginLogout').innerHTML = '<i class="fa-solid fa-key"></i> Login';
-    $('btnLoginLogout').className = 'btn btn-sm btn-o';
-  }
-  atualizarAbas();
-}
-
-function atualizarAbas(){
-  const c = getChamados();
-  const ab = c.filter(x=>x.status==='Aberto').length;
-  const an = c.filter(x=>x.status==='Em Andamento').length;
-  $('navTabs').innerHTML = `
-    <button type="button" class="tb active" data-tab="novo"><i class="fa-solid fa-plus"></i> Novo Chamado</button>
-    <button type="button" class="tb" data-tab="meus"><i class="fa-solid fa-list-check"></i> Acompanhar</button>
-    <button type="button" class="tb" data-tab="lider"><i class="fa-solid fa-clipboard-list"></i> Painel do Líder ${ab>0?`<span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;margin-left:6px;">${ab}</span>`:''}</button>
-    <button type="button" class="tb" data-tab="manutentor"><i class="fa-solid fa-wrench"></i> Minhas Tarefas ${an>0?`<span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;margin-left:6px;">${an}</span>`:''}</button>
-  `;
-  document.querySelectorAll('.tb').forEach(b => b.addEventListener('click', () => mostrarAba(b.dataset.tab)));
-}
-
-function mostrarAba(aba){
-  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tb').forEach(b => b.classList.remove('active'));
-  $('pane-'+aba).classList.add('active');
-  const t = document.querySelector(`.tb[data-tab="${aba}"]`); if(t) t.classList.add('active');
-  
-  if(aba === 'meus') {
-    // Puxa o último setor usado por este navegador
-    const ultimoSetor = localStorage.getItem('ultimoSetorVisitante') || '';
-    $('filtroSetor').value = ultimoSetor;
-    $('buscaProtocolo').value = ''; // Limpa busca
-    renderMeus();
-  }
-  if(aba === 'lider'){
-    if(!userLogado || userLogado.perfil !== 'lider'){
-      $('blocked-lider').style.display='block'; $('content-lider').style.display='none';
-    } else {
-      $('blocked-lider').style.display='none'; $('content-lider').style.display='block'; renderLider();
-    }
-  }
-  if(aba === 'manutentor'){
-    if(!userLogado || userLogado.perfil !== 'manutentor'){
-      $('blocked-manutentor').style.display='block'; $('content-manutentor').style.display='none';
-    } else {
-      $('blocked-manutentor').style.display='none'; $('content-manutentor').style.display='block'; renderManutentor();
-    }
-  }
-}
-
-function abrirChamado(){
-  const tipo = document.querySelector('input[name="tipo"]:checked');
-  if(!tipo) { alert('Selecione o tipo de manutenção.'); return; }
-  const setor = $('setor').value;
-  const emissor = $('emissor').value.trim();
-  const dataHora = $('dataHora').value;
-  const problema = $('problema').value.trim();
-  
-  if(!setor) { alert('Por favor, selecione o setor.'); return; }
-  if(!emissor || !dataHora || !problema) { alert('Por favor, preencha todos os campos.'); return; }
-  
-  const protocolo = contador;
-  const c = { 
-    id: protocolo, tipo: tipo.value, setor, emissor, dataHora, problema, 
-    status: 'Aberto', manutentor: '', solucao: '', itensTrocados: '', criadoEm: new Date().toISOString()
-  };
-  
-  const arr = getChamados(); arr.push(c); setChamados(arr);
-  contador++; localStorage.setItem('contadorChamado', contador);
-  
-  // Salva o setor para a aba de acompanhamento
-  localStorage.setItem('ultimoSetorVisitante', setor);
-
-  $('numChamadoDisplay').textContent = '#'+String(contador).padStart(4,'0');
-  $('setor').value=''; $('emissor').value=''; $('problema').value='';
-  document.querySelectorAll('input[name="tipo"]').forEach(r=>r.checked=false);
-  
-  atualizarAbas();
-  $('protocoloNumero').textContent = '#'+String(protocolo).padStart(4,'0');
-  $('modal-sucesso').classList.add('ativo');
-}
-
-// RENDERIZAR "ACOMPANHAR" (Filtrado)
-function renderMeus(){
-  const arr = getChamados();
-  const setorFiltro = $('filtroSetor').value;
-  const buscaProtocolo = $('buscaProtocolo').value.trim();
-  const L = $('lista-meus'); L.innerHTML = '';
-
-  let resultados = arr;
-
-  if(buscaProtocolo) {
-    const num = parseInt(buscaProtocolo);
-    if(!isNaN(num)) {
-      resultados = arr.filter(x => x.id === num);
-    } else {
-      resultados = [];
-    }
-  } 
-  else if(setorFiltro) {
-    resultados = arr.filter(x => x.setor === setorFiltro);
-  }
-
-  if(resultados.length === 0){
-    L.innerHTML = `<div class="card" style="text-align:center;padding:60px 20px;color:var(--m);">
-      <i class="fa-solid fa-search" style="font-size:48px;color:#cbd5e1;margin-bottom:15px;"></i>
-      <p>${buscaProtocolo ? 'Nenhum chamado encontrado com este protocolo.' : (setorFiltro ? 'Nenhum chamado pendente para o setor ' + setorFiltro : 'Selecione um setor ou busque um protocolo.')}</p>
-    </div>`;
-    return;
-  }
-
-  resultados.sort((a,b) => b.id - a.id).forEach(c => {
-    L.appendChild(criarCardVisitante(c));
-  });
-}
-
-function criarCardVisitante(c){
-  const d = document.createElement('div');
-  d.className = 'ci ' + c.status.toLowerCase().replace(' ', '-');
-  
-  let bc = 'ba';
-  if(c.status==='Em Andamento') bc='bn'; else if(c.status==='Resolvido') bc='br'; else if(c.status==='Arquivado'||c.status==='Cancelado') bc='bx';
-  
-  let statusAmigavel = c.status;
-  if(c.status === 'Aberto') statusAmigavel = 'Aguardando Técnico';
-  if(c.status === 'Em Andamento') statusAmigavel = 'Em Manutenção';
-  if(c.status === 'Resolvido') statusAmigavel = 'Serviço Concluído';
-  if(c.status === 'Arquivado') statusAmigavel = 'Finalizado';
-
-  let h = `
-    <div class="ct">
-      <span class="cid" style="font-size:16px;">#${String(c.id).padStart(4,'0')}</span>
-      <span class="sb ${bc}">${statusAmigavel}</span>
+<div id="tela-novo" class="screen">
+  <div class="screen-content">
+    <button class="back-btn" onclick="window.irPara('home-screen')"><i class="fa-solid fa-arrow-left"></i> Voltar ao Início</button>
+    <div class="inner-tabs">
+      <button class="inner-tab active" id="tab-btn-form" onclick="window.mudarSubAba('form')"><i class="fa-solid fa-plus-circle"></i> Nova Solicitação</button>
+      <button class="inner-tab" id="tab-btn-acomp" onclick="window.mudarSubAba('acomp')"><i class="fa-solid fa-list-check"></i> Acompanhar Chamados</button>
     </div>
-    <div class="cif">
-      <p style="margin-bottom:6px;"><i class="fa-solid fa-tag" style="width:16px;"></i> <strong>Tipo:</strong> ${c.tipo}</p>
-      <p style="margin-bottom:6px;"><i class="fa-solid fa-building" style="width:16px;"></i> <strong>Setor:</strong> ${c.setor}</p>
-      <p><i class="fa-solid fa-user" style="width:16px;"></i> <strong>Emissor:</strong> ${c.emissor}</p>
-    </div>
-    <div class="cp"><strong>Problema:</strong><br>${c.problema}</div>
-
-    <div class="timeline">
-      <div class="tl-item done">
-        <div class="tl-icon"><i class="fa-solid fa-check"></i></div>
-        <div class="tl-content"><h4>Chamado Aberto</h4><p>Recebemos sua solicitação.</p></div>
-      </div>
-      <div class="tl-item ${c.status !== 'Aberto' ? 'done' : 'current'}">
-        <div class="tl-icon"><i class="fa-solid ${c.status !== 'Aberto' ? 'fa-check' : 'fa-clock'}"></i></div>
-        <div class="tl-content"><h4>Análise e Atribuição</h4><p>${c.manutentor ? 'Atribuído para ' + c.manutentor : 'Aguardando um técnico assumir.'}</p></div>
-      </div>
-      <div class="tl-item ${c.status === 'Resolvido' || c.status === 'Arquivado' ? 'done' : (c.status === 'Em Andamento' ? 'current' : '')}">
-        <div class="tl-icon"><i class="fa-solid ${c.status === 'Resolvido' || c.status === 'Arquivado' ? 'fa-check' : 'fa-tools'}"></i></div>
-        <div class="tl-content"><h4>Manutenção</h4><p>${c.status === 'Em Andamento' ? 'Serviço em execução.' : (c.status === 'Resolvido' || c.status === 'Arquivado' ? 'Serviço executado.' : 'Pendente.')}</p></div>
-      </div>
-      <div class="tl-item ${c.status === 'Resolvido' || c.status === 'Arquivado' ? 'done' : ''}">
-        <div class="tl-icon"><i class="fa-solid fa-flag-checkered"></i></div>
-        <div class="tl-content"><h4>Concluído</h4><p>${c.status === 'Resolvido' || c.status === 'Arquivado' ? 'Serviço finalizado com sucesso.' : 'Pendente.'}</p></div>
-      </div>
-    </div>
-  `;
-
-  if(c.solucao) {
-    h += `<div class="aa" style="background:#ecfdf5; border-color:#6ee7b7; margin-top:25px;">
-      <p style="color:#047857; font-weight:700; margin-bottom:8px;"><i class="fa-solid fa-wrench"></i> Solução Aplicada por ${c.manutentor}:</p>
-      <p style="font-size:14px; color:#065f46;">${c.solucao}</p>
-    </div>`;
-  }
-
-  d.innerHTML = h;
-  return d;
-}
-
-function renderLider(){
-  const arr = getChamados();
-  const f = $('buscaLider').value.toLowerCase().trim();
-  
-  $('dashboard-lider').innerHTML = `
-    <div class="st a"><div class="num">${arr.filter(x=>x.status==='Aberto').length}</div><div class="lbl">Abertos</div></div>
-    <div class="st n"><div class="num">${arr.filter(x=>x.status==='Em Andamento').length}</div><div class="lbl">Em Execução</div></div>
-    <div class="st r"><div class="num">${arr.filter(x=>x.status==='Resolvido').length}</div><div class="lbl">Aguardando</div></div>
-  `;
-  
-  let ativos = arr.map((x,i)=>({...x, idx:i})).filter(x=>x.status!=='Arquivado' && x.status!=='Cancelado');
-  if(f) ativos = ativos.filter(x => String(x.id).includes(f) || x.setor.toLowerCase().includes(f) || x.emissor.toLowerCase().includes(f));
-  
-  const L = $('lista-lider'); L.innerHTML = '';
-  if(ativos.length === 0){
-    L.innerHTML = '<div class="card" style="text-align:center;padding:60px 20px;color:var(--m);"><i class="fa-solid fa-check-circle" style="font-size:48px;color:var(--s);margin-bottom:15px;opacity:0.5;"></i><p>Nenhum chamado pendente no momento.</p></div>';
-  } else {
-    ativos.reverse().forEach(x => L.appendChild(criarCard(x, 'lider')));
-  }
-  
-  const arq = arr.map((x,i)=>({...x, idx:i})).filter(x=>x.status==='Arquivado' || x.status==='Cancelado');
-  if(arq.length > 0 && !f){
-    const h = document.createElement('h3'); h.textContent = `Histórico (${arq.length})`;
-    h.style = 'margin:40px 0 20px; font-size:14px; color:var(--m); text-transform:uppercase; letter-spacing:1px;';
-    L.appendChild(h);
-    arq.reverse().slice(0,10).forEach(x => L.appendChild(criarCard(x, 'lider', true)));
-  }
-}
-
-function renderManutentor(){
-  if(!userLogado) return;
-  const arr = getChamados();
-  const meus = arr.map((x,i)=>({...x, idx:i})).filter(x=>x.manutentor===MANUTENTOR_NOME && x.status!=='Arquivado' && x.status!=='Cancelado');
-  const L = $('lista-manutentor'); L.innerHTML = '';
-  
-  if(meus.length === 0){
-    L.innerHTML = '<div class="card" style="text-align:center;padding:60px 20px;color:var(--m);"><i class="fa-solid fa-mug-hot" style="font-size:48px;margin-bottom:15px;opacity:0.5;"></i><p>Você não tem tarefas pendentes.</p></div>';
-    return;
-  }
-  meus.reverse().forEach(x => L.appendChild(criarCard(x, 'manutentor')));
-}
-
-function criarCard(c, ctx, leitura){
-  const d = document.createElement('div');
-  d.className = 'ci ' + c.status.toLowerCase().replace(' ', '-');
-  
-  let bc = 'ba';
-  if(c.status==='Em Andamento') bc='bn'; else if(c.status==='Resolvido') bc='br'; else if(c.status==='Arquivado'||c.status==='Cancelado') bc='bx';
-  
-  let h = `
-    <div class="ct">
-      <span class="cid" style="font-size:16px;">#${String(c.id).padStart(4,'0')}</span>
-      <span class="sb ${bc}">${c.status}</span>
-    </div>
-    <div class="cif">
-      <p style="margin-bottom:6px;"><i class="fa-solid fa-tag" style="width:16px;"></i> <strong>Tipo:</strong> ${c.tipo}</p>
-      <p style="margin-bottom:6px;"><i class="fa-solid fa-building" style="width:16px;"></i> <strong>Setor:</strong> ${c.setor}</p>
-      <p><i class="fa-solid fa-user" style="width:16px;"></i> <strong>Emissor:</strong> ${c.emissor}</p>
-    </div>
-    <div class="cp"><strong>Problema:</strong><br>${c.problema}</div>
-  `;
-  
-  if(leitura){
-    h += `<div class="aa" style="background:#f8fafc; border-style:solid;">
-      ${c.manutentor?`<p style="margin-bottom:8px;"><strong>Manutentor:</strong> ${c.manutentor}</p>`:''}
-      ${c.solucao?`<p><strong>Solução:</strong> ${c.solucao}</p>`:''}
-    </div>`;
-  } else if(ctx === 'lider'){
-    if(c.status === 'Aberto'){
-      h += `<div class="aa"><label style="font-weight:700;color:var(--p);font-size:13px;text-transform:uppercase;">Atribuir a um manutentor:</label>
-        <div class="ar"><select id="sel-${c.idx}"><option value="${MANUTENTOR_NOME}">${MANUTENTOR_NOME}</option></select><button type="button" class="btn btn-w btn-sm" onclick="__atribuir(${c.idx})"><i class="fa-solid fa-share"></i> Atribuir</button></div>
-      </div>`;
-    } else if(c.status === 'Em Andamento'){
-      h += `<div class="aa" style="background:#fffbeb; border-color:#fcd34d;"><p style="font-size:14px;color:#b45309;"><i class="fa-solid fa-spinner fa-spin"></i> Em execução por <strong>${c.manutentor}</strong></p></div>`;
-    } else if(c.status === 'Resolvido'){
-      h += `<div class="aa" style="background:#ecfdf5; border-color:#6ee7b7;">
-        <p style="margin-bottom:15px;"><strong>Solução:</strong> ${c.solucao}</p>
-        <div class="bg"><button type="button" class="btn btn-s btn-sm" onclick="__validar(${c.idx})"><i class="fa-solid fa-file-pdf"></i> Validar e Baixar PDF</button></div>
-      </div>`;
-    }
-  } else if(ctx === 'manutentor'){
-    if(c.status === 'Em Andamento'){
-      h += `<div class="aa">
-        <label style="font-weight:700;color:var(--p);font-size:13px;text-transform:uppercase;margin-bottom:10px;display:block;">Registrar Solução</label>
-        
-        <div class="fg" style="margin-bottom:12px; position:relative;">
-          <i class="fa-solid fa-user" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i>
-          <input type="text" id="nome-man-${c.idx}" placeholder="Seu nome (Manutentor)" style="width:100%; padding:12px 12px 12px 40px; border:2px solid var(--b); border-radius:8px; font-size:14px;">
+    <div id="sub-pane-form" class="inner-pane active">
+      <div class="card">
+        <div class="ch"><h2>Nova Solicitação</h2><span class="cid" id="numChamadoDisplay">Carregando...</span></div>
+        <div class="fg">
+          <label>Tipo de Manutenção</label>
+          <div class="rg">
+            <label class="rl"><input type="radio" name="tipo" value="Corretiva"> Corretiva</label>
+            <label class="rl"><input type="radio" name="tipo" value="Preventiva"> Preventiva</label>
+            <label class="rl"><input type="radio" name="tipo" value="Predial"> Predial</label>
+            <label class="rl"><input type="radio" name="tipo" value="Planejada"> Planejada</label>
+          </div>
         </div>
-        
-        <input type="text" id="sol-${c.idx}" placeholder="O que foi feito? (Solução)" style="width:100%;padding:12px;margin-bottom:12px;border:2px solid var(--b);border-radius:8px;font-size:14px;">
-        <input type="text" id="ite-${c.idx}" placeholder="Itens trocados (opcional)" style="width:100%;padding:12px;border:2px solid var(--b);border-radius:8px;font-size:14px;">
-        
-        <button type="button" class="btn btn-s btn-sm" style="margin-top:15px;width:100%;" onclick="__finalizar(${c.idx})">Concluir Serviço</button>
-      </div>`;
-    } else if(c.status === 'Resolvido'){
-      h += `<div class="aa" style="background:#ecfdf5; border-color:#6ee7b7;"><p style="color:#047857;font-weight:700;"><i class="fa-solid fa-circle-check"></i> Concluído por ${c.manutentor}. Aguardando validação do líder.</p></div>`;
+        <div class="row">
+          <div class="fg">
+            <label>Setor</label><i class="fa-solid fa-building"></i>
+            <select id="setor">
+              <option value="">Selecione o setor...</option>
+              <option value="Tecnologia da informação">Tecnologia da informação</option>
+              <option value="Logística">Logística</option>
+              <option value="Monitoramento">Monitoramento</option>
+              <option value="Recepção">Recepção</option>
+              <option value="Compras">Compras</option>
+              <option value="Administrativo">Administrativo</option>
+              <option value="RH">RH</option>
+              <option value="Copa">Copa</option>
+              <option value="Expedição">Expedição</option>
+              <option value="Novos negócios">Novos negócios</option>
+              <option value="Almoxarifado">Almoxarifado</option>
+              <option value="Coordenação">Coordenação</option>
+              <option value="QSMS">QSMS</option>
+              <option value="Sala do operacional">Sala do operacional</option>
+              <option value="Copa porto">Copa porto</option>
+            </select>
+          </div>
+          <div class="fg"><label>Emissor</label><i class="fa-solid fa-user-circle"></i><input type="text" id="emissor" placeholder="Seu nome completo"></div>
+        </div>
+        <div class="fg"><label>Data e Hora</label><i class="fa-regular fa-calendar"></i><input type="datetime-local" id="dataHora"></div>
+        <div class="fg full"><label>Descrição do Problema</label><textarea id="problema" rows="4" placeholder="Descreva detalhadamente..."></textarea></div>
+        <button type="button" id="btnAbrirChamado" class="btn btn-s" style="width:100%;margin-top:10px;padding:16px;"><i class="fa-solid fa-paper-plane"></i> Abrir Chamado</button>
+      </div>
+    </div>
+    <div id="sub-pane-acomp" class="inner-pane">
+      <div class="card">
+        <div class="ch">
+          <h2>Acompanhar Chamados</h2>
+          <span style="font-size:13px;color:var(--m);font-weight:500;">Filtrado por setor</span>
+        </div>
+        <div class="row" style="margin-bottom:15px;">
+          <div class="fg" style="margin-bottom:0;">
+            <select id="filtroSetor" style="padding-left:16px;">
+              <option value="">Todos os setores</option>
+              <option value="Tecnologia da informação">Tecnologia da informação</option>
+              <option value="Logística">Logística</option>
+              <option value="Monitoramento">Monitoramento</option>
+              <option value="Recepção">Recepção</option>
+              <option value="Compras">Compras</option>
+              <option value="Administrativo">Administrativo</option>
+              <option value="RH">RH</option>
+              <option value="Copa">Copa</option>
+              <option value="Expedição">Expedição</option>
+              <option value="Novos negócios">Novos negócios</option>
+              <option value="Almoxarifado">Almoxarifado</option>
+              <option value="Coordenação">Coordenação</option>
+              <option value="QSMS">QSMS</option>
+              <option value="Sala do operacional">Sala do operacional</option>
+              <option value="Copa porto">Copa porto</option>
+            </select>
+          </div>
+          <div class="fg" style="margin-bottom:0; position:relative;">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--m);"></i>
+            <input type="number" id="buscaProtocolo" placeholder="Buscar protocolo..." style="padding-left:45px;">
+          </div>
+        </div>
+        <div id="lista-meus"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tela-lider" class="screen">
+  <div class="screen-content">
+    <button class="back-btn" onclick="window.irPara('home-screen')"><i class="fa-solid fa-arrow-left"></i> Voltar ao Início</button>
+    <div class="dash" id="dashboard-lider"></div>
+    <div class="srch"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="buscaLider" placeholder="Buscar por ID, setor ou emissor..."></div>
+    <div id="lista-lider"></div>
+  </div>
+</div>
+
+<div id="tela-manutentor" class="screen">
+  <div class="screen-content">
+    <button class="back-btn" onclick="window.irPara('home-screen')"><i class="fa-solid fa-arrow-left"></i> Voltar ao Início</button>
+    <div id="lista-manutentor"></div>
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+  import { getDatabase, ref, push, set, onValue, update } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
+
+  // Usa a configuração que está no arquivo config.js (protegido pelo Git)
+  const app = initializeApp(window.firebaseConfig);
+  const db = getDatabase(app);
+
+  window.firebaseDB = { ref, push, set, onValue, update, db };
+  window.dispatchEvent(new Event('firebaseReady'));
+</script>
+
+<!-- SISTEMA PRINCIPAL -->
+<script>
+window.addEventListener('firebaseReady', () => {
+  const { ref, push, set, onValue, update, db } = window.firebaseDB;
+  const USUARIOS = { 'admin': { senha: 'Cbt@manutencao', nome: 'Admin (Líder)', perfil: 'lider' }, 'ManutencaoBel': { senha: 'Cbt@manutencao', nome: 'Manutenção Bel', perfil: 'manutentor' } };
+  const MANUTENTOR_NOME = "Manutenção Bel";
+  let userLogado = null, chamadosNuvem = [], filtroStatusAtivo = null, contadorLocal = 260; 
+  function $(id){ return document.getElementById(id); }
+
+  const chamadosRef = ref(db, 'chamados');
+  onValue(chamadosRef, (snapshot) => {
+    const data = snapshot.val();
+    chamadosNuvem = [];
+    if (data) {
+      for (const key in data) chamadosNuvem.push({ firebaseId: key, ...data[key] });
+      const maxId = Math.max(...chamadosNuvem.map(c => c.id || 0));
+      if (maxId >= contadorLocal) contadorLocal = maxId + 1;
     }
-  }
-  d.innerHTML = h;
-  return d;
-}
-
-window.__atribuir = function(i){
-  const a = getChamados(); a[i].status = 'Em Andamento'; a[i].manutentor = $('sel-'+i).value;
-  setChamados(a); renderLider(); atualizarAbas();
-};
-
-window.__finalizar = function(i){
-  const a = getChamados(); 
-  const nome = $('nome-man-'+i) ? $('nome-man-'+i).value.trim() : '';
-  const s = $('sol-'+i).value.trim(); 
-  const it = $('ite-'+i) ? $('ite-'+i).value.trim() : '';
-  
-  if(!nome) { alert('Por favor, digite o nome do manutentor.'); return; }
-  if(!s){ alert('Por favor, descreva a solução.'); return; }
-  
-  a[i].status = 'Resolvido'; 
-  a[i].manutentor = nome; 
-  a[i].solucao = s; 
-  a[i].itensTrocados = it || 'Nenhum';
-  
-  setChamados(a); renderManutentor(); atualizarAbas();
-};
-
-window.__validar = function(i){
-  const a = getChamados(); const chamado = a[i];
-  gerarPDF(chamado);
-  a[i].status = 'Arquivado'; a[i].arquivadoEm = new Date().toISOString();
-  setChamados(a); renderLider(); atualizarAbas();
-};
-
-function gerarPDF(c){
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'mm', 'a4');
-  const pageW = doc.internal.pageSize.getWidth();
-  const pageH = doc.internal.pageSize.getHeight();
-  const margin = 15;
-  let y = margin;
-
-  // Cabeçalho
-  doc.setFillColor(79, 70, 229); doc.rect(0, 0, pageW, 25, 'F');
-  doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
-  doc.setFontSize(20); doc.text('Combitrans', margin, 12);
-  doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.text('Sistema de Manutenção', margin, 18);
-  doc.setFontSize(10); doc.setFont('helvetica', 'bold'); doc.text(`#${String(c.id).padStart(4,'0')}`, pageW - margin, 15, { align: 'right' });
-
-  // Título
-  y = 35; doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
-  doc.text(`Comanda de Manutenção #${String(c.id).padStart(4,'0')}`, margin, y);
-  y += 3; doc.setDrawColor(229, 231, 235); doc.setLineWidth(0.5); doc.line(margin, y, pageW - margin, y);
-  
-  // Tabela de Dados
-  y += 10;
-  const dataAbertura = new Date(c.dataHora).toLocaleString('pt-BR');
-  const dataFechamento = new Date().toLocaleString('pt-BR');
-  const dados = [
-    ['Tipo', c.tipo], 
-    ['Status Final', 'CONCLUÍDO'], 
-    ['Setor', c.setor], 
-    ['Emissor', c.emissor],
-    ['Data de Abertura', dataAbertura], 
-    ['Data de Fechamento', dataFechamento], 
-    ['Manutentor Responsável', c.manutentor || 'Não informado']
-  ];
-  
-  doc.setFontSize(10);
-  dados.forEach(function(item){
-    doc.setFillColor(243, 244, 246); doc.rect(margin, y, 55, 8, 'F');
-    doc.setDrawColor(229, 231, 235); doc.rect(margin, y, 55, 8, 'S'); doc.rect(margin + 55, y, pageW - margin * 2 - 55, 8, 'S');
-    doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'bold'); doc.text(item[0], margin + 3, y + 5.5);
-    doc.setFont('helvetica', 'normal'); doc.text(String(item[1]).substring(0, 90), margin + 58, y + 5.5);
-    y += 8;
+    $('numChamadoDisplay').textContent = '#' + String(contadorLocal).padStart(4, '0');
+    renderMeus();
+    if(userLogado && userLogado.perfil === 'lider') renderLider();
+    if(userLogado && userLogado.perfil === 'manutentor') renderManutentor();
   });
 
-  // Problema
-  y += 8; doc.setTextColor(239, 68, 68); doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
-  doc.text('DESCRIÇÃO DO PROBLEMA', margin, y);
-  y += 3; doc.setDrawColor(239, 68, 68); doc.setLineWidth(1); doc.line(margin, y, margin + 30, y);
-  y += 5; doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-  
-  const linhasProblema = doc.splitTextToSize(c.problema, pageW - margin * 2 - 5); 
-  // Fundo leve para o problema
-  doc.setFillColor(254, 242, 242); doc.rect(margin - 2, y - 4, pageW - margin * 2 + 4, linhasProblema.length * 5 + 4, 'F');
-  doc.text(linhasProblema, margin + 2, y);
-  y += linhasProblema.length * 5 + 10;
+  window.irPara = function(idTela){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    $(idTela).classList.add('active');
+    if(idTela === 'tela-novo') window.mudarSubAba('form');
+    if(idTela === 'tela-lider') { filtroStatusAtivo = null; renderLider(); }
+    if(idTela === 'tela-manutentor') renderManutentor();
+  };
 
-  // Solução
-  doc.setTextColor(16, 185, 129); doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
-  doc.text('SOLUÇÃO APLICADA', margin, y);
-  y += 3; doc.setDrawColor(16, 185, 129); doc.line(margin, y, margin + 30, y);
-  y += 5; doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-  
-  const linhasSolucao = doc.splitTextToSize(c.solucao || 'Não informada', pageW - margin * 2 - 5); 
-  // Fundo leve para a solução
-  doc.setFillColor(236, 253, 245); doc.rect(margin - 2, y - 4, pageW - margin * 2 + 4, linhasSolucao.length * 5 + 4, 'F');
-  doc.text(linhasSolucao, margin + 2, y);
-  y += linhasSolucao.length * 5 + 10;
+  window.mudarSubAba = function(aba){
+    document.querySelectorAll('.inner-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.inner-tab').forEach(b => b.classList.remove('active'));
+    if(aba === 'form') { $('sub-pane-form').classList.add('active'); $('tab-btn-form').classList.add('active'); } 
+    else {
+      $('sub-pane-acomp').classList.add('active'); $('tab-btn-acomp').classList.add('active');
+      $('filtroSetor').value = localStorage.getItem('ultimoSetorVisitante') || '';
+      $('buscaProtocolo').value = '';
+      renderMeus();
+    }
+  };
 
-  // Itens Trocados
-  doc.setTextColor(79, 70, 229); doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
-  doc.text('ITENS TROCADOS', margin, y);
-  y += 3; doc.setDrawColor(79, 70, 229); doc.line(margin, y, margin + 30, y);
-  y += 5; doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-  
-  const linhasItens = doc.splitTextToSize(c.itensTrocados || 'Nenhum item trocado', pageW - margin * 2 - 5); 
-  // Fundo leve para itens
-  doc.setFillColor(243, 244, 246); doc.rect(margin - 2, y - 4, pageW - margin * 2 + 4, linhasItens.length * 5 + 4, 'F');
-  doc.text(linhasItens, margin + 2, y);
-  y += linhasItens.length * 5 + 15;
+  window.acessarPainel = function(perfilDesejado){
+    if(userLogado && userLogado.perfil === perfilDesejado) window.irPara(perfilDesejado === 'lider' ? 'tela-lider' : 'tela-manutentor');
+    else {
+      window.perfilPendente = perfilDesejado;
+      $('modal-login').classList.add('ativo');
+      $('msgLogin').textContent = ''; $('loginUser').value = ''; $('loginPass').value = '';
+      setTimeout(() => $('loginUser').focus(), 100);
+    }
+  };
 
-  // Rodapé
-  doc.setTextColor(150, 150, 150); doc.setFontSize(8);
-  doc.text('Documento gerado automaticamente pelo Sistema de Manutenção - Combitrans', pageW / 2, pageH - 10, { align: 'center' });
+  document.getElementById('btnEntrar').addEventListener('click', function(){
+    const user = $('loginUser').value.trim(), pass = $('loginPass').value, msg = $('msgLogin');
+    if(USUARIOS[user] && USUARIOS[user].senha === pass){
+      userLogado = { username: user, nome: USUARIOS[user].nome, perfil: USUARIOS[user].perfil };
+      sessionStorage.setItem('usuarioLogado', JSON.stringify(userLogado));
+      fecharLogin(); atualizarHeader();
+      if(window.perfilPendente) {
+        if(userLogado.perfil !== window.perfilPendente) alert('Atenção: Perfil diferente do selecionado.');
+        if(userLogado.perfil === 'lider') window.irPara('tela-lider'); else window.irPara('tela-manutentor');
+        window.perfilPendente = null;
+      } else { if(userLogado.perfil === 'lider') window.irPara('tela-lider'); else window.irPara('tela-manutentor'); }
+    } else { msg.textContent = '❌ Usuário ou senha incorretos'; msg.style.color = '#ef4444'; $('loginPass').value = ''; }
+  });
 
-  doc.save(`Comanda_${String(c.id).padStart(4,'0')}.pdf`);
-}
+  function fecharLogin(){ $('modal-login').classList.remove('ativo'); window.perfilPendente = null; }
+  window.toggleLogin = function(){ 
+    if(userLogado) { if(confirm('Deseja sair do sistema?')){ userLogado = null; sessionStorage.removeItem('usuarioLogado'); atualizarHeader(); window.irPara('home-screen'); } } 
+    else { window.perfilPendente = null; $('modal-login').classList.add('ativo'); }
+  };
 
-function init(){
+  function atualizarHeader(){
+    if(userLogado){
+      $('displayUserName').textContent = userLogado.nome; $('displayUserRole').textContent = userLogado.perfil.toUpperCase();
+      $('btnLoginLogout').innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Sair'; $('btnLoginLogout').className = 'btn btn-sm btn-d'; $('btnLoginLogout').style.display = 'inline-flex';
+    } else {
+      $('displayUserName').textContent = 'Visitante'; $('displayUserRole').textContent = 'Solicitante';
+      $('btnLoginLogout').innerHTML = '<i class="fa-solid fa-key"></i> Login'; $('btnLoginLogout').className = 'btn btn-sm btn-o'; $('btnLoginLogout').style.display = 'none';
+    }
+  }
+
+  document.getElementById('btnAbrirChamado').addEventListener('click', function(){
+    const tipo = document.querySelector('input[name="tipo"]:checked'); if(!tipo) { alert('Selecione o tipo de manutenção.'); return; }
+    const setor = $('setor').value, emissor = $('emissor').value.trim(), dataHora = $('dataHora').value, problema = $('problema').value.trim();
+    if(!setor) { alert('Por favor, selecione o setor.'); return; }
+    if(!emissor || !dataHora || !problema) { alert('Por favor, preencha todos os campos.'); return; }
+    
+    const novoId = contadorLocal;
+    const c = { id: novoId, tipo: tipo.value, setor, emissor, dataHora, problema, status: 'Aberto', manutentor: '', solucao: '', itensTrocados: '', criadoEm: new Date().toISOString() };
+    
+    const novoChamadoRef = push(chamadosRef);
+    set(novoChamadoRef, c).then(() => {
+      localStorage.setItem('ultimoSetorVisitante', setor);
+      $('setor').value=''; $('emissor').value=''; $('problema').value='';
+      document.querySelectorAll('input[name="tipo"]').forEach(r=>r.checked=false);
+      $('protocoloNumero').textContent = '#'+String(novoId).padStart(4,'0');
+      $('modal-sucesso').classList.add('ativo');
+      window.mudarSubAba('acomp');
+    }).catch(err => { alert('Erro ao salvar no banco: ' + err.message); });
+  });
+
+  function renderMeus(){
+    const setorFiltro = $('filtroSetor').value, buscaProtocolo = $('buscaProtocolo').value.trim(), L = $('lista-meus'); L.innerHTML = '';
+    let resultados = chamadosNuvem;
+    if(buscaProtocolo) { const num = parseInt(buscaProtocolo); if(!isNaN(num)) resultados = chamadosNuvem.filter(x => x.id === num); else resultados = []; } 
+    else if(setorFiltro) resultados = chamadosNuvem.filter(x => x.setor === setorFiltro);
+
+    if(resultados.length === 0){
+      L.innerHTML = `<div class="card" style="text-align:center;padding:60px 20px;color:var(--m);"><i class="fa-solid fa-search" style="font-size:48px;color:#cbd5e1;margin-bottom:15px;"></i><p>${buscaProtocolo ? 'Nenhum chamado encontrado.' : (setorFiltro ? 'Nenhum chamado para o setor ' + setorFiltro : 'Selecione um setor ou busque um protocolo.')}</p></div>`;
+      return;
+    }
+    resultados.sort((a,b) => b.id - a.id).forEach(c => L.appendChild(criarCardVisitante(c)));
+  }
+
+  function criarCardVisitante(c){
+    const d = document.createElement('div'); d.className = 'ci ' + (c.status || '').toLowerCase().replace(' ', '-');
+    let bc = 'ba'; if(c.status==='Em Andamento') bc='bn'; else if(c.status==='Resolvido') bc='br'; else if(c.status==='Arquivado'||c.status==='Cancelado') bc='bx';
+    let statusAmigavel = c.status;
+    if(c.status === 'Aberto') statusAmigavel = 'Aguardando Técnico'; if(c.status === 'Em Andamento') statusAmigavel = 'Em Manutenção'; if(c.status === 'Resolvido') statusAmigavel = 'Serviço Concluído'; if(c.status === 'Arquivado') statusAmigavel = 'Finalizado';
+
+    let h = `
+      <div class="ct"><span class="cid" style="font-size:16px;">#${String(c.id).padStart(4,'0')}</span><span class="sb ${bc}">${statusAmigavel}</span></div>
+      <div class="cif"><p style="margin-bottom:6px;"><i class="fa-solid fa-tag" style="width:16px;"></i> <strong>Tipo:</strong> ${c.tipo}</p><p style="margin-bottom:6px;"><i class="fa-solid fa-building" style="width:16px;"></i> <strong>Setor:</strong> ${c.setor}</p><p><i class="fa-solid fa-user" style="width:16px;"></i> <strong>Emissor:</strong> ${c.emissor}</p></div>
+      <div class="cp"><strong>Problema:</strong><br>${c.problema}</div>
+      <div class="timeline">
+        <div class="tl-item done"><div class="tl-icon"><i class="fa-solid fa-check"></i></div><div class="tl-content"><h4>Chamado Aberto</h4><p>Recebemos sua solicitação.</p></div></div>
+        <div class="tl-item ${c.status !== 'Aberto' ? 'done' : 'current'}"><div class="tl-icon"><i class="fa-solid ${c.status !== 'Aberto' ? 'fa-check' : 'fa-clock'}"></i></div><div class="tl-content"><h4>Análise</h4><p>${c.manutentor ? 'Atribuído para ' + c.manutentor : 'Aguardando técnico.'}</p></div></div>
+        <div class="tl-item ${c.status === 'Resolvido' || c.status === 'Arquivado' ? 'done' : (c.status === 'Em Andamento' ? 'current' : '')}"><div class="tl-icon"><i class="fa-solid ${c.status === 'Resolvido' || c.status === 'Arquivado' ? 'fa-check' : 'fa-tools'}"></i></div><div class="tl-content"><h4>Manutenção</h4><p>${c.status === 'Em Andamento' ? 'Em execução.' : (c.status === 'Resolvido' || c.status === 'Arquivado' ? 'Executado.' : 'Pendente.')}</p></div></div>
+        <div class="tl-item ${c.status === 'Resolvido' || c.status === 'Arquivado' ? 'done' : ''}"><div class="tl-icon"><i class="fa-solid fa-flag-checkered"></i></div><div class="tl-content"><h4>Concluído</h4><p>${c.status === 'Resolvido' || c.status === 'Arquivado' ? 'Finalizado.' : 'Pendente.'}</p></div></div>
+      </div>
+    `;
+    if(c.solucao) h += `<div class="aa" style="background:#ecfdf5; border-color:#6ee7b7; margin-top:25px;"><p style="color:#047857; font-weight:700; margin-bottom:8px;"><i class="fa-solid fa-wrench"></i> Solução por ${c.manutentor}:</p><p style="font-size:14px; color:#065f46;">${c.solucao}</p></div>`;
+    d.innerHTML = h; return d;
+  }
+
+  window.renderLider = function(){
+    if(!userLogado || userLogado.perfil !== 'lider') return;
+    const f = $('buscaLider').value.toLowerCase().trim();
+    const countAbertos = chamadosNuvem.filter(x=>x.status==='Aberto').length, countAndamento = chamadosNuvem.filter(x=>x.status==='Em Andamento').length, countResolvidos = chamadosNuvem.filter(x=>x.status==='Resolvido').length;
+    $('dashboard-lider').innerHTML = `
+      <div class="st a ${filtroStatusAtivo === 'Aberto' ? 'active' : ''}" onclick="window.alternarFiltro('Aberto')"><div class="num">${countAbertos}</div><div class="lbl">Abertos</div></div>
+      <div class="st n ${filtroStatusAtivo === 'Em Andamento' ? 'active' : ''}" onclick="window.alternarFiltro('Em Andamento')"><div class="num">${countAndamento}</div><div class="lbl">Em Execução</div></div>
+      <div class="st r ${filtroStatusAtivo === 'Resolvido' ? 'active' : ''}" onclick="window.alternarFiltro('Resolvido')"><div class="num">${countResolvidos}</div><div class="lbl">Aguardando</div></div>
+    `;
+    let ativos = chamadosNuvem.filter(x=>x.status!=='Arquivado' && x.status!=='Cancelado');
+    if(filtroStatusAtivo) ativos = ativos.filter(x => x.status === filtroStatusAtivo);
+    if(f) ativos = ativos.filter(x => String(x.id).includes(f) || x.setor.toLowerCase().includes(f) || x.emissor.toLowerCase().includes(f));
+    const L = $('lista-lider'); L.innerHTML = '';
+    if(ativos.length === 0) L.innerHTML = '<div class="card" style="text-align:center;padding:60px 20px;color:var(--m);"><i class="fa-solid fa-check-circle" style="font-size:48px;color:var(--s);margin-bottom:15px;opacity:0.5;"></i><p>Nenhum chamado encontrado.</p></div>';
+    else ativos.sort((a,b) => b.id - a.id).forEach(x => L.appendChild(criarCard(x, 'lider')));
+    const arq = chamadosNuvem.filter(x=>x.status==='Arquivado' || x.status==='Cancelado');
+    if(arq.length > 0 && !f && !filtroStatusAtivo){
+      const h = document.createElement('h3'); h.textContent = `Histórico (${arq.length})`; h.style = 'margin:40px 0 20px; font-size:14px; color:var(--m); text-transform:uppercase; letter-spacing:1px;';
+      L.appendChild(h); arq.sort((a,b) => b.id - a.id).slice(0,10).forEach(x => L.appendChild(criarCard(x, 'lider', true)));
+    }
+  };
+
+  window.alternarFiltro = function(status) { filtroStatusAtivo = (filtroStatusAtivo === status) ? null : status; window.renderLider(); };
+
+  window.renderManutentor = function(){
+    if(!userLogado || userLogado.perfil !== 'manutentor') return;
+    const meus = chamadosNuvem.filter(x=>x.manutentor===MANUTENTOR_NOME && x.status!=='Arquivado' && x.status!=='Cancelado');
+    const L = $('lista-manutentor'); L.innerHTML = '';
+    if(meus.length === 0) L.innerHTML = '<div class="card" style="text-align:center;padding:60px 20px;color:var(--m);"><i class="fa-solid fa-mug-hot" style="font-size:48px;margin-bottom:15px;opacity:0.5;"></i><p>Você não tem tarefas pendentes.</p></div>';
+    else meus.sort((a,b) => b.id - a.id).forEach(x => L.appendChild(criarCard(x, 'manutentor')));
+  };
+
+  function criarCard(c, ctx, leitura){
+    const d = document.createElement('div'); d.className = 'ci ' + (c.status || '').toLowerCase().replace(' ', '-');
+    let bc = 'ba'; if(c.status==='Em Andamento') bc='bn'; else if(c.status==='Resolvido') bc='br'; else if(c.status==='Arquivado'||c.status==='Cancelado') bc='bx';
+    let h = `<div class="ct"><span class="cid" style="font-size:16px;">#${String(c.id).padStart(4,'0')}</span><span class="sb ${bc}">${c.status}</span></div><div class="cif"><p style="margin-bottom:6px;"><i class="fa-solid fa-tag" style="width:16px;"></i> <strong>Tipo:</strong> ${c.tipo}</p><p style="margin-bottom:6px;"><i class="fa-solid fa-building" style="width:16px;"></i> <strong>Setor:</strong> ${c.setor}</p><p><i class="fa-solid fa-user" style="width:16px;"></i> <strong>Emissor:</strong> ${c.emissor}</p></div><div class="cp"><strong>Problema:</strong><br>${c.problema}</div>`;
+    if(leitura) h += `<div class="aa" style="background:#f8fafc; border-style:solid;">${c.manutentor?`<p style="margin-bottom:8px;"><strong>Manutentor:</strong> ${c.manutentor}</p>`:''}${c.solucao?`<p><strong>Solução:</strong> ${c.solucao}</p>`:''}</div>`;
+    else if(ctx === 'lider'){
+      if(c.status === 'Aberto') h += `<div class="aa"><label style="font-weight:700;color:var(--p);font-size:13px;text-transform:uppercase;">Atribuir a um manutentor:</label><div class="ar"><select id="sel-${c.firebaseId}"><option value="${MANUTENTOR_NOME}">${MANUTENTOR_NOME}</option></select><button type="button" class="btn btn-w btn-sm" onclick="window.__atribuir('${c.firebaseId}')"><i class="fa-solid fa-share"></i> Atribuir</button></div></div>`;
+      else if(c.status === 'Em Andamento') h += `<div class="aa" style="background:#fffbeb; border-color:#fcd34d;"><p style="font-size:14px;color:#b45309;"><i class="fa-solid fa-spinner fa-spin"></i> Em execução por <strong>${c.manutentor}</strong></p></div>`;
+      else if(c.status === 'Resolvido') h += `<div class="aa" style="background:#ecfdf5; border-color:#6ee7b7;"><p style="margin-bottom:15px;"><strong>Solução:</strong> ${c.solucao}</p><div class="bg"><button type="button" class="btn btn-s btn-sm" onclick="window.__validar('${c.firebaseId}')"><i class="fa-solid fa-file-pdf"></i> Validar e Baixar PDF</button></div></div>`;
+    } else if(ctx === 'manutentor'){
+      if(c.status === 'Em Andamento') h += `<div class="aa"><label style="font-weight:700;color:var(--p);font-size:13px;text-transform:uppercase;margin-bottom:10px;display:block;">Registrar Solução</label><div class="fg" style="margin-bottom:12px; position:relative;"><i class="fa-solid fa-user" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i><input type="text" id="nome-man-${c.firebaseId}" placeholder="Seu nome (Manutentor)" style="width:100%; padding:12px 12px 12px 40px; border:2px solid var(--b); border-radius:8px; font-size:14px;"></div><input type="text" id="sol-${c.firebaseId}" placeholder="O que foi feito? (Solução)" style="width:100%;padding:12px;margin-bottom:12px;border:2px solid var(--b);border-radius:8px;font-size:14px;"><input type="text" id="ite-${c.firebaseId}" placeholder="Itens trocados (opcional)" style="width:100%;padding:12px;border:2px solid var(--b);border-radius:8px;font-size:14px;"><button type="button" class="btn btn-s btn-sm" style="margin-top:15px;width:100%;" onclick="window.__finalizar('${c.firebaseId}')">Concluir Serviço</button></div>`;
+      else if(c.status === 'Resolvido') h += `<div class="aa" style="background:#ecfdf5; border-color:#6ee7b7;"><p style="color:#047857;font-weight:700;"><i class="fa-solid fa-circle-check"></i> Concluído por ${c.manutentor}. Aguardando validação do líder.</p></div>`;
+    }
+    d.innerHTML = h; return d;
+  }
+
+  window.__atribuir = function(firebaseId){ update(ref(db, 'chamados/' + firebaseId), { status: 'Em Andamento', manutentor: $('sel-'+firebaseId).value }); };
+  window.__finalizar = function(firebaseId){
+    const nome = $('nome-man-'+firebaseId) ? $('nome-man-'+firebaseId).value.trim() : '', s = $('sol-'+firebaseId).value.trim(), it = $('ite-'+firebaseId) ? $('ite-'+firebaseId).value.trim() : '';
+    if(!nome) { alert('Por favor, digite o nome do manutentor.'); return; }
+    if(!s){ alert('Por favor, descreva a solução.'); return; }
+    update(ref(db, 'chamados/' + firebaseId), { status: 'Resolvido', manutentor: nome, solucao: s, itensTrocados: it || 'Nenhum' });
+  };
+  window.__validar = function(firebaseId){
+    const chamado = chamadosNuvem.find(c => c.firebaseId === firebaseId);
+    if(chamado) { gerarPDF(chamado); update(ref(db, 'chamados/' + firebaseId), { status: 'Arquivado', arquivadoEm: new Date().toISOString() }); }
+  };
+
+  function gerarPDF(c){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageW = doc.internal.pageSize.getWidth(), pageH = doc.internal.pageSize.getHeight(), margin = 15;
+    let y = margin;
+    doc.setFillColor(79, 70, 229); doc.rect(0, 0, pageW, 25, 'F');
+    doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20); doc.text('Combitrans', margin, 12);
+    doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.text('Sistema de Manutenção', margin, 18);
+    doc.setFontSize(10); doc.setFont('helvetica', 'bold'); doc.text(`#${String(c.id).padStart(4,'0')}`, pageW - margin, 15, { align: 'right' });
+    y = 35; doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+    doc.text(`Comanda de Manutenção #${String(c.id).padStart(4,'0')}`, margin, y);
+    y += 3; doc.setDrawColor(229, 231, 235); doc.setLineWidth(0.5); doc.line(margin, y, pageW - margin, y);
+    y += 10;
+    const dataAbertura = new Date(c.dataHora).toLocaleString('pt-BR'), dataFechamento = new Date().toLocaleString('pt-BR');
+    const dados = [['Tipo', c.tipo], ['Status Final', 'CONCLUÍDO'], ['Setor', c.setor], ['Emissor', c.emissor], ['Data de Abertura', dataAbertura], ['Data de Fechamento', dataFechamento], ['Manutentor Responsável', c.manutentor || 'Não informado']];
+    doc.setFontSize(10);
+    dados.forEach(function(item){
+      doc.setFillColor(243, 244, 246); doc.rect(margin, y, 55, 8, 'F');
+      doc.setDrawColor(229, 231, 235); doc.rect(margin, y, 55, 8, 'S'); doc.rect(margin + 55, y, pageW - margin * 2 - 55, 8, 'S');
+      doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'bold'); doc.text(item[0], margin + 3, y + 5.5);
+      doc.setFont('helvetica', 'normal'); doc.text(String(item[1]).substring(0, 90), margin + 58, y + 5.5); y += 8;
+    });
+    y += 8; doc.setTextColor(239, 68, 68); doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('DESCRIÇÃO DO PROBLEMA', margin, y);
+    y += 3; doc.setDrawColor(239, 68, 68); doc.setLineWidth(1); doc.line(margin, y, margin + 30, y);
+    y += 5; doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    const linhasProblema = doc.splitTextToSize(c.problema, pageW - margin * 2 - 5); 
+    doc.setFillColor(254, 242, 242); doc.rect(margin - 2, y - 4, pageW - margin * 2 + 4, linhasProblema.length * 5 + 4, 'F'); doc.text(linhasProblema, margin + 2, y); y += linhasProblema.length * 5 + 10;
+    doc.setTextColor(16, 185, 129); doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('SOLUÇÃO APLICADA', margin, y);
+    y += 3; doc.setDrawColor(16, 185, 129); doc.line(margin, y, margin + 30, y);
+    y += 5; doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    const linhasSolucao = doc.splitTextToSize(c.solucao || 'Não informada', pageW - margin * 2 - 5); 
+    doc.setFillColor(236, 253, 245); doc.rect(margin - 2, y - 4, pageW - margin * 2 + 4, linhasSolucao.length * 5 + 4, 'F'); doc.text(linhasSolucao, margin + 2, y); y += linhasSolucao.length * 5 + 10;
+    doc.setTextColor(79, 70, 229); doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('ITENS TROCADOS', margin, y);
+    y += 3; doc.setDrawColor(79, 70, 229); doc.line(margin, y, margin + 30, y);
+    y += 5; doc.setTextColor(31, 41, 55); doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    const linhasItens = doc.splitTextToSize(c.itensTrocados || 'Nenhum item trocado', pageW - margin * 2 - 5); 
+    doc.setFillColor(243, 244, 246); doc.rect(margin - 2, y - 4, pageW - margin * 2 + 4, linhasItens.length * 5 + 4, 'F'); doc.text(linhasItens, margin + 2, y); y += linhasItens.length * 5 + 15;
+    doc.setTextColor(150, 150, 150); doc.setFontSize(8); doc.text('Documento gerado automaticamente pelo Sistema de Manutenção - Combitrans', pageW / 2, pageH - 10, { align: 'center' });
+    doc.save(`Comanda_${String(c.id).padStart(4,'0')}.pdf`);
+  }
+
   try { const s = sessionStorage.getItem('usuarioLogado'); if(s) userLogado = JSON.parse(s); } catch(e){}
   const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   $('dataHora').value = now.toISOString().slice(0,16);
-  $('numChamadoDisplay').textContent = '#'+String(contador).padStart(4,'0');
-  
-  $('btnEntrar').addEventListener('click', tentarLogin);
   $('btnCancelarLogin').addEventListener('click', fecharLogin);
   $('btnFecharSucesso').addEventListener('click', () => $('modal-sucesso').classList.remove('ativo'));
-  $('btnLoginLogout').addEventListener('click', toggleLogin);
-  $('btnAbrirChamado').addEventListener('click', abrirChamado);
-  $('buscaLider').addEventListener('input', renderLider);
+  $('btnLoginLogout').addEventListener('click', window.toggleLogin);
+  $('buscaLider').addEventListener('input', window.renderLider);
   $('buscaProtocolo').addEventListener('input', renderMeus);
   $('filtroSetor').addEventListener('change', renderMeus);
-  
-  $('loginPass').addEventListener('keypress', e => { if(e.key==='Enter') tentarLogin(); });
-  document.querySelectorAll('.btnAbrirLogin').forEach(b => b.addEventListener('click', abrirLogin));
+  $('loginPass').addEventListener('keypress', e => { if(e.key==='Enter') document.getElementById('btnEntrar').click(); });
   $('modal-login').addEventListener('click', e => { if(e.target === $('modal-login')) fecharLogin(); });
-  
-  atualizarTela();
-  if(userLogado){
-    if(userLogado.perfil === 'lider') mostrarAba('lider');
-    else mostrarAba('manutentor');
-  }
-}
-document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
-})();
+  atualizarHeader();
+});
 </script>
 </body>
 </html>
+
+
+
+
